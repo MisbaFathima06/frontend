@@ -24,20 +24,20 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-5xl md:text-7xl font-bold mb-6"
+          className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight"
         >
-          <span className="text-white">Secure, Transparent,</span>
-          <br />
-          <span className="text-gradient">Anonymous Voting</span>
+          <span className="text-white block mb-2">Your Voice.</span>
+          <span className="text-white block mb-2">Your Power.</span>
+          <span className="text-gradient block">Secured by Cryptography.</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto"
+          className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed"
         >
-          Powered by Zero-Knowledge Proofs and Blockchain
+          Every vote matters. Every voice counts. Built with Zero-Knowledge Proofs and Blockchain technology for absolute privacy and transparency.
         </motion.p>
 
         <motion.div
@@ -46,12 +46,12 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
         >
-          <button className="group relative px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_40px_rgba(59,130,246,0.6)]">
-            <span className="flex items-center gap-2">
+          <button className="group relative px-10 py-5 bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold rounded-full transition-all duration-300 transform hover:scale-110 hover:shadow-[0_0_60px_rgba(59,130,246,0.8)] animate-pulse-glow">
+            <span className="flex items-center gap-3">
               Start Voting Now
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
             </span>
-            <div className="absolute inset-0 rounded-full bg-blue-400 blur-xl opacity-50 group-hover:opacity-75 transition-opacity -z-10" />
+            <div className="absolute inset-0 rounded-full bg-blue-400 blur-2xl opacity-60 group-hover:opacity-100 transition-opacity -z-10" />
           </button>
         </motion.div>
 

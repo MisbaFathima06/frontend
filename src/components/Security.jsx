@@ -61,13 +61,105 @@ const Security = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.2 }}
-              className="relative glass-morphism rounded-2xl p-8 hover:scale-105 transition-all duration-300"
+              className="relative glass-morphism rounded-2xl p-8 hover:scale-105 transition-all duration-300 group"
             >
-              <div className={`inline-flex p-4 rounded-xl bg-gradient-to-br ${feature.color} mb-6`}>
-                <feature.icon className="w-8 h-8 text-white" />
+              {/* Animated SVG background */}
+              <div className="absolute inset-0 opacity-10 overflow-hidden rounded-2xl">
+                {index === 0 && (
+                  <svg className="w-full h-full" viewBox="0 0 200 200">
+                    <motion.circle
+                      cx="100"
+                      cy="100"
+                      r="80"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      fill="none"
+                      className="text-blue-500"
+                      initial={{ pathLength: 0, rotate: 0 }}
+                      animate={isInView ? { pathLength: 1, rotate: 360 } : {}}
+                      transition={{ duration: 2, delay: index * 0.2, repeat: Infinity, repeatDelay: 3 }}
+                    />
+                    <motion.circle
+                      cx="100"
+                      cy="100"
+                      r="60"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      fill="none"
+                      className="text-blue-400"
+                      initial={{ pathLength: 0, rotate: 180 }}
+                      animate={isInView ? { pathLength: 1, rotate: -180 } : {}}
+                      transition={{ duration: 2, delay: index * 0.2 + 0.5, repeat: Infinity, repeatDelay: 3 }}
+                    />
+                  </svg>
+                )}
+                {index === 1 && (
+                  <svg className="w-full h-full" viewBox="0 0 200 200">
+                    <motion.path
+                      d="M 100 20 L 100 180 M 20 100 L 180 100"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="text-teal-500"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={isInView ? { pathLength: 1, opacity: 1 } : {}}
+                      transition={{ duration: 1.5, delay: index * 0.2, repeat: Infinity, repeatDelay: 3 }}
+                    />
+                    <motion.path
+                      d="M 50 50 L 50 150 L 150 150 L 150 50 Z"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      fill="none"
+                      className="text-teal-400"
+                      initial={{ pathLength: 0 }}
+                      animate={isInView ? { pathLength: 1 } : {}}
+                      transition={{ duration: 2, delay: index * 0.2 + 0.3, repeat: Infinity, repeatDelay: 3 }}
+                    />
+                  </svg>
+                )}
+                {index === 2 && (
+                  <svg className="w-full h-full" viewBox="0 0 200 200">
+                    <motion.circle
+                      cx="100"
+                      cy="100"
+                      r="70"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      fill="none"
+                      className="text-cyan-500"
+                      strokeDasharray="5,5"
+                      initial={{ pathLength: 0 }}
+                      animate={isInView ? { pathLength: 1 } : {}}
+                      transition={{ duration: 2, delay: index * 0.2, repeat: Infinity, repeatDelay: 3 }}
+                    />
+                    <motion.line
+                      x1="100"
+                      y1="30"
+                      x2="100"
+                      y2="170"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="text-cyan-400"
+                      initial={{ pathLength: 0 }}
+                      animate={isInView ? { pathLength: 1 } : {}}
+                      transition={{ duration: 1.5, delay: index * 0.2 + 0.5, repeat: Infinity, repeatDelay: 3 }}
+                    />
+                  </svg>
+                )}
               </div>
+
+              {/* Icon with animation */}
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={isInView ? { scale: 1, rotate: 0 } : {}}
+                transition={{ duration: 0.8, delay: index * 0.2 + 0.3, type: "spring" }}
+                className={`inline-flex p-4 rounded-xl bg-gradient-to-br ${feature.color} mb-6 relative z-10`}
+              >
+                <feature.icon className="w-8 h-8 text-white" />
+              </motion.div>
               
-              <h3 className="text-2xl font-bold text-white mb-3">{feature.title}</h3>
+              <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
+                {feature.title}
+              </h3>
               <p className="text-gray-400 mb-4">{feature.shortDesc}</p>
               
               <button
@@ -80,9 +172,13 @@ const Security = () => {
               </button>
 
               {activeTooltip === index && (
-                <div className="absolute z-20 top-full left-0 right-0 mt-2 p-4 bg-slate-900 rounded-lg shadow-xl border border-slate-700">
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute z-20 top-full left-0 right-0 mt-2 p-4 bg-slate-900 rounded-lg shadow-xl border border-slate-700"
+                >
                   <p className="text-sm text-gray-300">{feature.fullDesc}</p>
-                </div>
+                </motion.div>
               )}
             </motion.div>
           ))}
@@ -92,17 +188,53 @@ const Security = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="glass-morphism rounded-2xl p-8 bg-gradient-to-r from-blue-500/10 to-teal-500/10"
+          className="glass-morphism rounded-2xl p-8 bg-gradient-to-r from-blue-500/10 to-teal-500/10 relative overflow-hidden"
         >
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Animated background pattern */}
+          <div className="absolute inset-0 opacity-20">
+            <motion.div
+              animate={{
+                backgroundPosition: ['0% 0%', '100% 100%'],
+              }}
+              transition={{
+                duration: 20,
+                repeat: Infinity,
+                repeatType: 'reverse',
+              }}
+              className="absolute inset-0"
+              style={{
+                backgroundImage: 'radial-gradient(circle, rgba(59,130,246,0.3) 1px, transparent 1px)',
+                backgroundSize: '20px 20px',
+              }}
+            />
+          </div>
+
+          <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex-1">
               <h3 className="text-2xl font-bold text-white mb-2">Security Audited & Verified</h3>
               <p className="text-gray-400">
                 Our system has been independently audited by leading cybersecurity firms and cryptography experts.
               </p>
             </div>
-            <button className="px-8 py-3 bg-white text-slate-900 font-semibold rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">
-              View Audit Report
+            <button className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-teal-600 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-105 whitespace-nowrap">
+              <span className="relative z-10 flex items-center gap-2">
+                View Audit Report
+                <Shield className="w-5 h-5" />
+              </span>
+              {/* Glowing animation */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-teal-400 blur-xl opacity-50 group-hover:opacity-100 transition-opacity -z-10" />
+              <motion.div
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.5, 0.8, 0.5],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute inset-0 bg-gradient-to-r from-blue-400 to-teal-400 opacity-0 group-hover:opacity-50"
+              />
             </button>
           </div>
         </motion.div>
