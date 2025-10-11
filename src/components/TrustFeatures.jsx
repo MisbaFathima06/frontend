@@ -50,19 +50,54 @@ const TrustFeatures = () => {
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-              className="group relative glass-morphism rounded-2xl p-8 hover:scale-105 transition-all duration-300"
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
+              transition={{ 
+                duration: 0.8, 
+                delay: index * 0.2,
+                type: "spring",
+                stiffness: 100
+              }}
+              whileHover={{ 
+                scale: 1.05,
+                y: -10,
+                transition: { duration: 0.3 }
+              }}
+              className="group relative glass-morphism rounded-2xl p-8 cursor-pointer"
             >
-              <div className={`inline-flex p-4 rounded-xl bg-gradient-to-br ${feature.color} mb-6 group-hover:shadow-lg transition-shadow`}>
+              {/* Animated icon */}
+              <motion.div
+                initial={{ rotate: -180, scale: 0 }}
+                animate={isInView ? { rotate: 0, scale: 1 } : {}}
+                transition={{ 
+                  duration: 0.8, 
+                  delay: index * 0.2 + 0.3,
+                  type: "spring",
+                  stiffness: 200
+                }}
+                className={`inline-flex p-4 rounded-xl bg-gradient-to-br ${feature.color} mb-6 group-hover:shadow-2xl group-hover:shadow-blue-500/50 transition-all duration-300`}
+              >
                 <feature.icon className="w-8 h-8 text-white" />
-              </div>
+              </motion.div>
               
-              <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
+              <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">
+                {feature.title}
+              </h3>
               <p className="text-gray-400 leading-relaxed">{feature.description}</p>
               
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/10 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
+              {/* Animated gradient background */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/10 to-teal-500/10 -z-10"
+              />
+              
+              {/* Animated border */}
+              <motion.div
+                initial={{ scale: 1, opacity: 0 }}
+                whileHover={{ scale: 1.02, opacity: 1 }}
+                className="absolute inset-0 rounded-2xl border-2 border-blue-500/50 -z-10"
+              />
             </motion.div>
           ))}
         </div>

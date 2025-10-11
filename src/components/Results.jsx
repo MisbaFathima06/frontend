@@ -45,7 +45,12 @@ const Results = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="glass-morphism rounded-2xl p-8">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, type: "spring" }}
+              className="glass-morphism rounded-2xl p-8"
+            >
               <h3 className="text-2xl font-bold text-white mb-8">Vote Distribution</h3>
               
               <div className="space-y-6">
@@ -87,11 +92,16 @@ const Results = () => {
                   </span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           <div className="lg:col-span-1">
-            <div className="glass-morphism rounded-2xl p-8">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.3, type: "spring" }}
+              className="glass-morphism rounded-2xl p-8"
+            >
               <div className="flex items-center gap-2 mb-6">
                 <Activity className="w-5 h-5 text-green-400" />
                 <h3 className="text-xl font-bold text-white">Blockchain Event Log</h3>
@@ -126,7 +136,7 @@ const Results = () => {
                   <span className="text-sm text-gray-400">Live updates active</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
