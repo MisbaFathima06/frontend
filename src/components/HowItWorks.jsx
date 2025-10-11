@@ -9,22 +9,22 @@ const HowItWorks = () => {
 
   const steps = [
     {
-      icon: LogIn,
-      step: 'STEP 1',
-      title: 'Session Setup',
-      description: 'Log in with your email or Google account. This is only for session management and is never linked to your vote.',
-    },
-    {
       icon: UserCheck,
-      step: 'STEP 2',
-      title: 'Anonymous Identity Creation',
-      description: 'We generate a cryptographic Zero-Knowledge identity that proves you\'re eligible without revealing who you are.',
+      step: 'STEP 1',
+      title: 'Create Your Identity',
+      description: 'Generate secure credentials instantly on your device',
     },
     {
       icon: Vote,
+      step: 'STEP 2',
+      title: 'Cast Your Vote',
+      description: 'Select your candidate and encrypt locally',
+    },
+    {
+      icon: CheckCircle,
       step: 'STEP 3',
-      title: 'Secure Vote Casting',
-      description: 'Select your candidate and submit. Your vote is encrypted, verified, and recorded on the blockchain anonymously.',
+      title: 'Verify Proof',
+      description: 'Blockchain confirms without revealing your choice',
     },
   ];
 

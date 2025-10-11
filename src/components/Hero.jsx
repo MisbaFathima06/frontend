@@ -37,7 +37,7 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed"
         >
-          Every vote matters. Every voice counts. Built with Zero-Knowledge Proofs and Blockchain technology for absolute privacy and transparency.
+          Vote anonymously using zero-knowledge proofs. No tracking. Complete privacy.
         </motion.p>
 
         <motion.div
@@ -59,20 +59,13 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto"
+          className="absolute bottom-32 left-1/2 -translate-x-1/2 w-full max-w-6xl px-4"
         >
-          <div className="text-center">
-            <div className="text-4xl font-bold text-white mb-2">100%</div>
-            <div className="text-gray-400">Anonymous</div>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-white mb-2">∞</div>
-            <div className="text-gray-400">Tamper-Proof</div>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-white mb-2">0</div>
-            <div className="text-gray-400">Gas Fees</div>
-          </div>
+          <img
+            src="/image.png"
+            alt="Secure Voting"
+            className="w-full h-auto max-h-96 object-contain opacity-90"
+          />
         </motion.div>
       </div>
 

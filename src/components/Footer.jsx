@@ -68,9 +68,14 @@ const Footer = () => {
         </div>
 
         <div className="pt-8 border-t border-slate-800">
+          <div className="glass-morphism rounded-xl p-4 mb-6 bg-cyan-500/10 border border-cyan-500/20 text-center">
+            <p className="text-sm text-gray-300 leading-relaxed">
+              All votes encrypted end-to-end. No personal data collected or stored.
+            </p>
+          </div>
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-gray-400 text-sm">
-              © {currentYear} SecureVote. All rights reserved. Built with ❤️ for democracy.
+              © {currentYear} SecureVote. All rights reserved. Built for democracy.
             </p>
             <div className="flex items-center gap-6">
               <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
