@@ -13,21 +13,21 @@ const Security = () => {
       icon: Shield,
       title: 'Zero-Knowledge Proofs',
       shortDesc: 'Prove eligibility without revealing identity',
-      fullDesc: 'ZK-SNARKs allow voters to prove they are eligible to vote without revealing any personal information. The cryptographic proof verifies eligibility while maintaining complete anonymity.',
+      fullDesc: 'Voters confirm eligibility with ZK Proofs—completely anonymous.',
       color: 'from-blue-500 to-blue-600',
     },
     {
       icon: GitBranch,
       title: 'Merkle Trees',
-      shortDesc: 'Efficient verification of large datasets',
-      fullDesc: 'Merkle Trees enable efficient and secure verification of vote integrity. Each vote is hashed and combined into a tree structure, making tampering mathematically impossible to hide.',
+      shortDesc: 'Quickly verify votes without compromise',
+      fullDesc: 'Merkle Trees ensure tamper-proof verification of all votes ',
       color: 'from-teal-500 to-teal-600',
     },
     {
       icon: Ban,
       title: 'Nullifiers',
       shortDesc: 'Prevent double-voting without tracking identity',
-      fullDesc: 'Unique nullifiers are generated for each vote to prevent double-voting. These one-time tokens ensure each person votes only once, without linking the vote to their identity.',
+      fullDesc: 'Unique nullifiers guarantee one vote per voter, anonymously',
       color: 'from-cyan-500 to-cyan-600',
     },
   ];
@@ -50,7 +50,7 @@ const Security = () => {
             Built with Military-Grade Security
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Understanding the technology that keeps your vote secure and anonymous
+            Learn how cutting-edge cryptography keeps your vote secure and anonymous.
           </p>
         </motion.div>
 
@@ -211,9 +211,9 @@ const Security = () => {
 
           <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex-1">
-              <h3 className="text-2xl font-bold text-white mb-2">Security Audited & Verified</h3>
+              <h3 className="text-2xl font-bold text-white mb-2">Audited & Verified</h3>
               <p className="text-gray-400">
-                Our system has been independently audited by leading cybersecurity firms and cryptography experts.
+                Independent audits confirm vote security and privacy.
               </p>
             </div>
             <button className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-teal-600 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-105 whitespace-nowrap">

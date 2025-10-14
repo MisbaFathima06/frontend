@@ -12,19 +12,19 @@ const HowItWorks = () => {
       icon: UserCheck,
       step: 'STEP 1',
       title: 'Create Your Identity',
-      description: 'Generate secure credentials instantly on your device',
+      description: 'Securely register your voter ID in seconds—your privacy stays protected',
     },
     {
       icon: Vote,
       step: 'STEP 2',
       title: 'Cast Your Vote',
-      description: 'Select your candidate and encrypt locally',
+      description: 'Choose the candidate you believe in and cast your vote safely on your device',
     },
     {
       icon: CheckCircle,
       step: 'STEP 3',
-      title: 'Verify Proof',
-      description: 'Blockchain confirms without revealing your choice',
+      title: 'Verify Your Vote',
+      description: 'Rest easy—your vote is recorded accurately without revealing your choice.',
     },
   ];
 
@@ -39,10 +39,10 @@ const HowItWorks = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            How It Works
+            Your Voice. Your Vote. Your Power.
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Three simple steps to cast your secure, anonymous vote
+            Follow three simple steps to safely cast your vote and make a real impact in your community.
           </p>
         </motion.div>
 
@@ -132,7 +132,8 @@ const HowItWorks = () => {
         >
           <button className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105">
             <CheckCircle className="w-5 h-5" />
-            Ready to vote? Get started now!
+            Your vote matters—cast it now and shape the future!
+
           </button>
         </motion.div>
       </div>

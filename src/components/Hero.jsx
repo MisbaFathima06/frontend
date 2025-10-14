@@ -3,13 +3,14 @@ import { motion } from 'framer-motion';
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[url('/page-1.png')] bg-cover bg-center bg-no-repeat">
+      {/* Dark overlay for readability */}
+ <div className="absolute inset-0 bg-white/90 backdrop-blur-sm -z-10" />
+      {/* Optional gradient overlay */}
       <div className="absolute inset-0 gradient-bg -z-10" />
-      
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItaDJ2LTJoLTJ6bTAgNHYyaDJ2LTJoLTJ6bS0yLTJ2Mmgydi0yaC0yem0wLTJ2Mmgydi0yaC0yem0tMiAydjJoMnYtMmgtMnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30 -z-10" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -18,7 +19,7 @@ const Hero = () => {
           <div className="inline-flex items-center justify-center p-3 mb-6 bg-white/10 rounded-full backdrop-blur-sm">
             <Shield className="w-12 h-12 text-white animate-float" />
           </div>
-        </motion.div>
+        </motion.div> */}
 
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -26,19 +27,23 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight"
         >
-          <span className="text-white block mb-2">Your Voice.</span>
-          <span className="text-white block mb-2">Your Power.</span>
-          <span className="text-gradient block">Secured by Cryptography.</span>
+          <span className="text-white block mb-2">Your Voice</span>
+          <span className="text-white block mb-2">Your Power</span>
+          <span className="text-gradient block text-2xl md:text-3xl lg:text-4xl">Secured by Cryptography</span>
+
         </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed"
-        >
-          Vote anonymously using zero-knowledge proofs. No tracking. Complete privacy.
-        </motion.p>
+        <motion.div
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, delay: 0.4 }}
+  className="text-xs md:text-sm text-gray-300 mb-4 max-w-xl mx-auto leading-tight space-y-0.5"
+>
+  <p>Your voice matters.</p>
+  <p>Completely transparent, completely safe.</p>
+  <p>Share your choice — it’s yours and only yours.</p>
+</motion.div>
+
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -46,26 +51,17 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
         >
-          <button className="group relative px-10 py-5 bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold rounded-full transition-all duration-300 transform hover:scale-110 hover:shadow-[0_0_60px_rgba(59,130,246,0.8)] animate-pulse-glow">
-            <span className="flex items-center gap-3">
-              Start Voting Now
-              <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
-            </span>
-            <div className="absolute inset-0 rounded-full bg-blue-400 blur-2xl opacity-60 group-hover:opacity-100 transition-opacity -z-10" />
-          </button>
-        </motion.div>
+          <button className="group relative px-10 py-5 bg-[#1B2A41] hover:bg-[#223351]
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="absolute bottom-32 left-1/2 -translate-x-1/2 w-full max-w-6xl px-4"
-        >
-          <img
-            src="/image.png"
-            alt="Secure Voting"
-            className="w-full h-auto max-h-96 object-contain opacity-90"
-          />
+
+ text-white text-lg font-semibold rounded-full transition-all duration-300 hover:shadow-[0_0_25px_rgba(30,64,175,0.6)]">
+  <span className="flex items-center gap-3">
+    Start Voting Now
+    <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+  </span>
+</button>
+
+
         </motion.div>
       </div>
 

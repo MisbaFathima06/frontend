@@ -8,10 +8,10 @@ const Results = () => {
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   const results = [
-    { name: 'Alexandra Chen', party: 'Progressive Alliance', votes: 3420, percentage: 34, color: 'bg-blue-500' },
-    { name: 'Marcus Johnson', party: 'Unity Coalition', votes: 2890, percentage: 29, color: 'bg-teal-500' },
-    { name: 'Priya Sharma', party: 'Innovation Party', votes: 2150, percentage: 21, color: 'bg-cyan-500' },
-    { name: 'Robert Martinez', party: 'People First Movement', votes: 1540, percentage: 16, color: 'bg-indigo-500' },
+    { name: 'Aarav Mehta', party: "People's Party", votes: 3420, percentage: 34, color: 'bg-blue-500' },
+    { name: 'Sara Nair', party: 'People’s Alliance', votes: 2890, percentage: 29, color: 'bg-teal-500' },
+    { name: 'Imran Qureshi', party: 'Innovation Party', votes: 2150, percentage: 21, color: 'bg-cyan-500' },
+    { name: 'Meera Das', party: 'Unity Front', votes: 1540, percentage: 16, color: 'bg-indigo-500' },
   ];
 
   const blockchainEvents = [
@@ -24,6 +24,8 @@ const Results = () => {
   return (
     <section id="results" className="py-20 bg-slate-900 dark:bg-slate-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Section header */}
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 30 }}
@@ -39,11 +41,13 @@ const Results = () => {
             Current Vote Standings
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Real-time results verified on the blockchain
+            Real-time results verified securely on the blockchain
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* Vote distribution chart */}
           <div className="lg:col-span-2">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -52,7 +56,6 @@ const Results = () => {
               className="glass-morphism rounded-2xl p-8"
             >
               <h3 className="text-2xl font-bold text-white mb-8">Vote Distribution</h3>
-              
               <div className="space-y-6">
                 {results.map((result, index) => (
                   <motion.div
@@ -95,6 +98,7 @@ const Results = () => {
             </motion.div>
           </div>
 
+          {/* Blockchain event log */}
           <div className="lg:col-span-1">
             <motion.div
               initial={{ opacity: 0, x: 50 }}
@@ -130,14 +134,13 @@ const Results = () => {
                 ))}
               </div>
 
-              <div className="mt-6 pt-6 border-t border-slate-700">
-                <div className="flex items-center justify-center gap-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                  <span className="text-sm text-gray-400">Live updates active</span>
-                </div>
+              <div className="mt-6 pt-6 border-t border-slate-700 flex items-center justify-center gap-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                <span className="text-sm text-gray-400">Live updates active</span>
               </div>
             </motion.div>
           </div>
+
         </div>
       </div>
     </section>

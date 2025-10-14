@@ -11,47 +11,72 @@ const Candidates = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
 
   const candidates = [
-    {
-      id: 1,
-      name: 'Alexandra Chen',
-      party: 'Progressive Alliance',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop',
-      bio: 'Former environmental scientist with 15 years of experience in sustainable policy development.',
-      fullBio: 'Alexandra Chen brings 15 years of environmental science expertise to public service. Her work in sustainable policy development has led to groundbreaking initiatives in climate action and renewable energy. She advocates for equitable economic growth that doesn\'t compromise our planet\'s future.',
-      achievements: ['Led 50+ sustainability projects', 'Published climate research', 'Award-winning policy maker'],
-      vision: 'Building a sustainable future where economic growth and environmental protection go hand in hand.'
-    },
-    {
-      id: 2,
-      name: 'Marcus Johnson',
-      party: 'Unity Coalition',
-      image: 'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop',
-      bio: 'Experienced civil rights attorney and community organizer.',
-      fullBio: 'Marcus Johnson has dedicated his career to fighting for social justice and equality. As a civil rights attorney, he has successfully represented countless communities in their fight for fair treatment. His grassroots organizing has brought together diverse groups to create lasting change.',
-      achievements: ['Won 100+ civil rights cases', 'Founded 3 community centers', 'Healthcare reform advocate'],
-      vision: 'Creating a society where justice, healthcare, and education are accessible to all, regardless of background.'
-    },
-    {
-      id: 3,
-      name: 'Priya Sharma',
-      party: 'Innovation Party',
-      image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop',
-      bio: 'Tech entrepreneur and former city council member.',
-      fullBio: 'Priya Sharma combines technological innovation with public service experience. As a successful tech entrepreneur, she understands how to leverage technology for social good. Her tenure on city council modernized public services and supported small businesses.',
-      achievements: ['Built 2 successful startups', 'Digital infrastructure pioneer', 'Small business champion'],
-      vision: 'Modernizing public services through technology while ensuring no one is left behind in the digital age.'
-    },
-    {
-      id: 4,
-      name: 'Robert Martinez',
-      party: 'People First Movement',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
-      bio: 'Veteran educator and labor union leader.',
-      fullBio: 'Robert Martinez has spent 20 years fighting for workers\' rights and educational excellence. As a veteran educator, he understands the challenges facing our education system. His leadership in labor unions has secured better conditions and fair wages for thousands of workers.',
-      achievements: ['30 years in education', 'Led successful union campaigns', 'Affordable housing advocate'],
-      vision: 'Strengthening workers\' rights, affordable housing, and public education to build thriving communities.'
-    },
-  ];
+  {
+    id: 1,
+    name: 'Aarav Mehta',
+    party: "People's Party",
+    image: '/candidate1.png',
+    bio: 'Focused on youth development and modern education policies.',
+    fullBio:
+      'Aarav believes in a strong education system and creating more opportunities for young people. His goal is to prepare the next generation for leadership through innovation and learning.',
+    achievements: [
+      'Introduced youth mentorship programs',
+      'Improved digital learning access',
+      'Supported new education reforms'
+    ],
+    vision:
+      'A future where education empowers every child to become a confident leader.'
+  },
+  {
+    id: 2,
+    name: 'Sara Nair',
+    party: 'People’s Alliance',
+    image: '/candidate2.png',
+    bio: 'Committed to healthcare and social equality for all citizens.',
+    fullBio:
+      'Sara has worked for years to improve healthcare systems and women’s welfare. She believes that every person deserves access to affordable, quality healthcare and a safe society.',
+    achievements: [
+      'Built health awareness campaigns',
+      'Supported women empowerment drives',
+      'Improved rural medical access'
+    ],
+    vision:
+      'To build a healthy, safe, and equal society for everyone.'
+  },
+  {
+    id: 3,
+    name: 'Imran Qureshi',
+    party: 'Innovation Party',
+    image: '/candidate3.png',
+    bio: 'Advocates for digital transparency and technology-driven governance.',
+    fullBio:
+      'Imran aims to make government processes transparent and corruption-free using modern technology. He focuses on using blockchain, AI, and digital tools to make systems faster and fairer.',
+    achievements: [
+      'Launched e-governance projects',
+      'Introduced tech literacy workshops',
+      'Created digital complaint systems'
+    ],
+    vision:
+      'To bring innovation and honesty together for a stronger, smarter future.'
+  },
+  {
+    id: 4,
+    name: 'Meera Das',
+    party: 'Unity Front',
+    image: '/candidate4.png',
+    bio: "Works for women’s rights, equality, and inclusive growth.",
+    fullBio:
+      'Meera stands for fairness, inclusion, and community growth. She works to ensure women have equal access to opportunities and that social programs reach every part of society.',
+    achievements: [
+      'Founded community training centers',
+      'Started equality awareness campaigns',
+      'Introduced inclusive education policies'
+    ],
+    vision:
+      'To build a united society where equality and respect guide every decision.'
+  }
+];
+
 
   return (
     <section id="candidates" className="py-20 bg-slate-900 dark:bg-slate-950">
@@ -68,11 +93,11 @@ const Candidates = () => {
             <span className="text-sm font-semibold uppercase tracking-wider">MEET THE CANDIDATES</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Choose Your Candidate
+            Meet the Voices Shaping Tomorrow
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Learn about each candidate's background, experience, and vision for the future
-          </p>
+            Discover their dreams, ideas, and the impact they want to make.
+            </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -108,7 +133,7 @@ const Candidates = () => {
                         onClick={() => setOpenModal(candidate)}
                         className="px-6 py-3 bg-white text-slate-900 font-bold rounded-lg hover:bg-blue-500 hover:text-white transition-colors"
                       >
-                        View Full Profile
+                        Discover Their Story
                       </button>
                     </div>
                   </div>
@@ -235,7 +260,7 @@ const Candidates = () => {
                     }}
                     className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700 text-white text-lg font-bold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
                   >
-                    Vote for {openModal.name}
+                    Support {openModal.name}'s Vision
                   </button>
                 </div>
               </motion.div>

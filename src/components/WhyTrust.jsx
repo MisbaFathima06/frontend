@@ -10,7 +10,7 @@ const WhyTrust = () => {
   const features = [
     {
       icon: Shield,
-      title: 'Military-Grade Encryption',
+      title: 'Zero-Knowledge Proofs',
       description: 'Every vote protected by zero-knowledge proofs',
       color: 'from-blue-500 to-blue-600',
     },
