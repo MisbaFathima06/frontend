@@ -1,5 +1,8 @@
 import { ArrowRight, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { lazy, Suspense } from 'react';
+
+const EnhanceHero3D = lazy(() => import('./EnhanceHero3D'));
 
 const Hero = () => {
   return (
@@ -62,6 +65,17 @@ const Hero = () => {
 </button>
 
 
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="mt-8 max-w-2xl mx-auto"
+        >
+          <Suspense fallback={<div className="h-64 bg-gray-900/20 rounded-2xl animate-pulse" />}>
+            <EnhanceHero3D />
+          </Suspense>
         </motion.div>
       </div>
 
