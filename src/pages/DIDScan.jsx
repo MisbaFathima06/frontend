@@ -2,35 +2,32 @@ import { motion } from "framer-motion";
 import { CreditCard, CheckCircle2, XCircle, Loader2, Scan } from "lucide-react";
 import { useState, useEffect } from "react";
 
-export function DIDScan({ onComplete }) {
+export default function DIDScan() {
   const [scanProgress, setScanProgress] = useState(0);
-  const [scanStatus, setScanStatus] = useState('scanning'); // scanning, success, failed
+  const [scanStatus, setScanStatus] = useState('scanning');
   const [scanLine, setScanLine] = useState(0);
 
   useEffect(() => {
-    // Simulate scanning progress
     const interval = setInterval(() => {
       setScanProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          // Simulate success (90% success rate)
           const success = Math.random() > 0.1;
           setScanStatus(success ? 'success' : 'failed');
-          
-          // Callback after animation
+
           setTimeout(() => {
-            if (onComplete) {
-              onComplete(success);
+            if (success) {
+              window.history.pushState({}, '', '/voter/dashboard');
+              window.dispatchEvent(new PopStateEvent('popstate'));
             }
           }, 1500);
-          
+
           return 100;
         }
         return prev + 2;
       });
     }, 60);
 
-    // Animate scan line
     const scanInterval = setInterval(() => {
       setScanLine((prev) => (prev >= 100 ? 0 : prev + 2));
     }, 30);
@@ -39,17 +36,15 @@ export function DIDScan({ onComplete }) {
       clearInterval(interval);
       clearInterval(scanInterval);
     };
-  }, [onComplete]);
+  }, []);
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 overflow-hidden flex items-center justify-center">
-      {/* Animated background glow */}
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-3xl" />
       </div>
 
-      {/* Grid overlay */}
       <div
         className="absolute inset-0 opacity-5"
         style={{
@@ -61,11 +56,8 @@ export function DIDScan({ onComplete }) {
         }}
       />
 
-      {/* Main content */}
       <div className="relative z-10 flex flex-col items-center justify-center px-4">
-        {/* Digital ID Card Scanner */}
         <div className="relative mb-12">
-          {/* Outer glow */}
           <motion.div
             className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-3xl"
             animate={{
@@ -79,16 +71,13 @@ export function DIDScan({ onComplete }) {
             }}
           />
 
-          {/* ID Card Container */}
           <div className="relative w-[400px] h-[250px] bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl border-2 border-blue-500/30 rounded-2xl overflow-hidden shadow-2xl">
-            {/* Card background pattern */}
             <div className="absolute inset-0 opacity-5">
               <div className="absolute top-4 left-4 w-12 h-12 border border-blue-400 rounded-lg" />
               <div className="absolute top-4 right-4 w-8 h-8 border border-cyan-400 rounded" />
               <div className="absolute bottom-4 left-4 w-16 h-16 border border-blue-400 rounded-full" />
             </div>
 
-            {/* Scan line overlay */}
             {scanStatus === 'scanning' && (
               <motion.div
                 className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent shadow-[0_0_20px_rgba(59,130,246,0.8)]"
@@ -96,16 +85,13 @@ export function DIDScan({ onComplete }) {
               />
             )}
 
-            {/* Corner brackets */}
             <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-blue-400" />
             <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-blue-400" />
             <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-blue-400" />
             <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-blue-400" />
 
-            {/* Card content mockup */}
             <div className="relative h-full flex items-center justify-center p-8">
               <div className="flex gap-6 items-center">
-                {/* Profile photo placeholder */}
                 <div className="relative">
                   <div className="w-24 h-24 bg-slate-700/50 border-2 border-blue-500/30 rounded-lg flex items-center justify-center overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10" />
@@ -133,7 +119,6 @@ export function DIDScan({ onComplete }) {
                   )}
                 </div>
 
-                {/* Info lines */}
                 <div className="flex-1 space-y-3">
                   <div className="h-4 bg-slate-700/50 rounded w-32" />
                   <div className="h-3 bg-slate-700/30 rounded w-24" />
@@ -146,13 +131,11 @@ export function DIDScan({ onComplete }) {
               </div>
             </div>
 
-            {/* Scanning overlay */}
             {scanStatus === 'scanning' && (
               <div className="absolute inset-0 bg-gradient-to-b from-blue-500/0 via-blue-500/5 to-blue-500/0" />
             )}
           </div>
 
-          {/* Floating scan icon */}
           {scanStatus === 'scanning' && (
             <motion.div
               className="absolute -right-16 top-1/2 -translate-y-1/2"
@@ -164,7 +147,6 @@ export function DIDScan({ onComplete }) {
           )}
         </div>
 
-        {/* Status text */}
         <motion.div
           className="text-center"
           initial={{ opacity: 0, y: 20 }}
@@ -181,7 +163,7 @@ export function DIDScan({ onComplete }) {
               </div>
             </>
           )}
-          
+
           {scanStatus === 'success' && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -192,7 +174,7 @@ export function DIDScan({ onComplete }) {
               <p className="text-green-400">Digital credentials confirmed</p>
             </motion.div>
           )}
-          
+
           {scanStatus === 'failed' && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -205,7 +187,6 @@ export function DIDScan({ onComplete }) {
           )}
         </motion.div>
 
-        {/* Progress bar */}
         {scanStatus === 'scanning' && (
           <motion.div
             className="w-96 mt-8"
@@ -216,11 +197,11 @@ export function DIDScan({ onComplete }) {
             <div className="w-full bg-slate-800/50 rounded-full h-1.5 overflow-hidden">
               <motion.div
                 className="h-full bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 bg-[length:200%_100%]"
-                animate={{ 
+                animate={{
                   width: `${scanProgress}%`,
                   backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
                 }}
-                transition={{ 
+                transition={{
                   width: { duration: 0.3 },
                   backgroundPosition: { duration: 2, repeat: Infinity, ease: "linear" }
                 }}
@@ -229,7 +210,6 @@ export function DIDScan({ onComplete }) {
           </motion.div>
         )}
 
-        {/* Document info */}
         {scanStatus === 'scanning' && (
           <motion.div
             className="mt-8 grid grid-cols-3 gap-4 text-center"
@@ -252,7 +232,6 @@ export function DIDScan({ onComplete }) {
           </motion.div>
         )}
 
-        {/* Security badge */}
         <motion.div
           className="mt-12 flex items-center gap-2 text-gray-500 text-sm"
           initial={{ opacity: 0 }}

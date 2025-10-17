@@ -9,6 +9,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import VoterSessionInit from './pages/VoterSessionInit';
 import VoterDashboard from './pages/VoterDashboard';
 import VoteConfirmed from './pages/VoteConfirmed';
+import BiometricScan from './pages/BiometricScan';
+import DIDScan from './pages/DIDScan';
 
 export default function Router() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -50,6 +52,18 @@ export default function Router() {
         return (
           <RequireUser>
             <VoterSessionInit />
+          </RequireUser>
+        );
+      case '/biometric':
+        return (
+          <RequireUser>
+            <BiometricScan />
+          </RequireUser>
+        );
+      case '/did':
+        return (
+          <RequireUser>
+            <DIDScan />
           </RequireUser>
         );
       case '/voter/dashboard':

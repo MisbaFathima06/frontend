@@ -1,19 +1,11 @@
-<<<<<<< HEAD
-import { useState, useEffect } from 'react';
-import { useAuth } from '../components/auth/AuthProvider';
-import { listCandidates, generateProof, maskHex, submitVote } from '../lib/helpers/voting';
-import { Shield, Vote, LogOut, AlertCircle } from 'lucide-react';
-=======
 import { motion } from "framer-motion";
 import { Shield, LogOut, AlertCircle } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../components/ui/Button";
 import { useEffect, useRef } from "react";
->>>>>>> ee26865 (Wire Biometric/DID pages, fix imports (framer-motion), normalize exports, add routes, image refs)
 
-export function CastVote({ identity, candidates = [], onLogout }) {
+export default function VoterDashboard() {
   const canvasRef = useRef(null);
 
-  // Animated background
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -47,32 +39,13 @@ export function CastVote({ identity, candidates = [], onLogout }) {
         p.y += p.vy;
         p.z += p.vz;
 
-<<<<<<< HEAD
-  const loadCandidates = async () => {
-    try {
-      const data = listCandidates();
-      setCandidates(data);
-    } catch (error) {
-      console.error('Error loading candidates:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-=======
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
         if (p.z < 0 || p.z > 1000) p.vz *= -1;
->>>>>>> ee26865 (Wire Biometric/DID pages, fix imports (framer-motion), normalize exports, add routes, image refs)
 
         const scale = 1000 / (1000 + p.z);
         const size = Math.max(1, 2 * scale);
 
-<<<<<<< HEAD
-    try {
-      const proofData = generateProof(identity, candidate.id);
-
-      const result = await submitVote(candidate.id, proofData);
-=======
         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 3);
         gradient.addColorStop(0, `rgba(59, 130, 246, ${0.6 * scale})`);
         gradient.addColorStop(1, "rgba(59, 130, 246, 0)");
@@ -82,7 +55,6 @@ export function CastVote({ identity, candidates = [], onLogout }) {
         ctx.arc(p.x, p.y, size * 3, 0, Math.PI * 2);
         ctx.fill();
       });
->>>>>>> ee26865 (Wire Biometric/DID pages, fix imports (framer-motion), normalize exports, add routes, image refs)
 
       requestAnimationFrame(animate);
     }
@@ -99,6 +71,8 @@ export function CastVote({ identity, candidates = [], onLogout }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const candidates = [];
+
   const maskCommitment = (commitment) => {
     if (!commitment) return "0x8a35...c79d";
     return `0x${commitment.slice(0, 4)}...${commitment.slice(-4)}`;
@@ -106,14 +80,12 @@ export function CastVote({ identity, candidates = [], onLogout }) {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 overflow-hidden">
-      {/* Animated Canvas Background */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
         style={{ zIndex: 0 }}
       />
 
-      {/* Grid overlay */}
       <div
         className="absolute inset-0 opacity-10"
         style={{
@@ -126,11 +98,9 @@ export function CastVote({ identity, candidates = [], onLogout }) {
         }}
       />
 
-      {/* Gradient orbs */}
       <div className="absolute top-1/4 right-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" style={{ zIndex: 1 }} />
       <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" style={{ zIndex: 1 }} />
 
-      {/* Top Navigation */}
       <motion.nav
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -144,7 +114,10 @@ export function CastVote({ identity, candidates = [], onLogout }) {
 
         <Button
           variant="ghost"
-          onClick={onLogout}
+          onClick={() => {
+            window.history.pushState({}, '', '/');
+            window.dispatchEvent(new PopStateEvent('popstate'));
+          }}
           className="text-gray-400 hover:text-white hover:bg-white/5"
         >
           <LogOut className="w-4 h-4 mr-2" />
@@ -152,9 +125,7 @@ export function CastVote({ identity, candidates = [], onLogout }) {
         </Button>
       </motion.nav>
 
-      {/* Main Content */}
       <div className="relative z-10 px-8 py-12 max-w-5xl mx-auto">
-        {/* Hero Text */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -169,7 +140,6 @@ export function CastVote({ identity, candidates = [], onLogout }) {
           </p>
         </motion.div>
 
-        {/* ZK Identity Active Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -187,14 +157,13 @@ export function CastVote({ identity, candidates = [], onLogout }) {
               </p>
               <div className="bg-slate-900/50 border border-slate-700/50 rounded-lg px-4 py-3">
                 <p className="text-blue-400 font-mono text-sm">
-                  {maskCommitment(identity?.commitment)}
+                  {maskCommitment(null)}
                 </p>
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* Candidates Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -202,7 +171,6 @@ export function CastVote({ identity, candidates = [], onLogout }) {
           className="bg-slate-800/30 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-12"
         >
           {candidates.length === 0 ? (
-            // Empty State
             <div className="text-center py-16">
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
@@ -222,7 +190,6 @@ export function CastVote({ identity, candidates = [], onLogout }) {
               </p>
             </div>
           ) : (
-            // Candidates List (for when you add them)
             <div className="space-y-4">
               {candidates.map((candidate, index) => (
                 <motion.div
@@ -256,10 +223,3 @@ export function CastVote({ identity, candidates = [], onLogout }) {
     </div>
   );
 }
-<<<<<<< HEAD
-
-export default function VoterDashboard() {
-  return <VoterDashboardContent />;
-}
-=======
->>>>>>> ee26865 (Wire Biometric/DID pages, fix imports (framer-motion), normalize exports, add routes, image refs)

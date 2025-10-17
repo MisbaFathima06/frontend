@@ -1,61 +1,14 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Fingerprint, CheckCircle2, AlertCircle, Loader2, Lock, Eye, EyeOff } from "lucide-react";
-import { Button } from "./ui/button";
-import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { Shield, Mail, Lock as LockIcon, Loader2 } from "lucide-react";
+import { Button } from "../components/ui/Button";
+import { useState, useRef, useEffect } from "react";
 
-// Simulated ZK identity generation
-const generateZKIdentity = () => {
-  // Simulate generating a real ZK identity
-  const privateKey = Array.from({ length: 32 }, () => 
-    Math.floor(Math.random() * 256).toString(16).padStart(2, '0')
-  ).join('');
-  
-  const commitment = Array.from({ length: 32 }, () => 
-    Math.floor(Math.random() * 256).toString(16).padStart(2, '0')
-  ).join('');
-  
-  const nullifierHash = Array.from({ length: 32 }, () => 
-    Math.floor(Math.random() * 256).toString(16).padStart(2, '0')
-  ).join('');
-
-  return {
-    privateKey,
-    commitment,
-    nullifierHash,
-    timestamp: Date.now(),
-    version: '1.0.0'
-  };
-};
-
-// Simulate eligibility check (80% success rate)
-const checkEligibility = async (method) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const isEligible = Math.random() > 0.2; // 80% success rate
-      resolve({
-        success: isEligible,
-        method,
-        message: isEligible 
-          ? 'Eligibility confirmed' 
-          : 'You are not eligible to vote in this election'
-      });
-    }, 2000); // 2 second eligibility check
-  });
-};
-
-export function VoterSessionInit({ onSessionReady }) {
-  const [step, setStep] = useState('intro'); // intro, verify, generating, success, error
-  const [selectedMethod, setSelectedMethod] = useState(null);
-  const [isCheckingEligibility, setIsCheckingEligibility] = useState(false);
-  const [isGeneratingIdentity, setIsGeneratingIdentity] = useState(false);
-  const [eligibilityError, setEligibilityError] = useState(null);
-  const [identity, setIdentity] = useState(null);
-  const [showCommitment, setShowCommitment] = useState(false);
-  const [generationProgress, setGenerationProgress] = useState(0);
-  
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const canvasRef = useRef(null);
 
-  // Animated background
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -121,70 +74,24 @@ export function VoterSessionInit({ onSessionReady }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Handle verification method selection
-  const handleVerificationMethod = async (method) => {
-    setSelectedMethod(method);
-    setIsCheckingEligibility(true);
-    setEligibilityError(null);
-    
-    // Check eligibility
-    const result = await checkEligibility(method);
-    setIsCheckingEligibility(false);
-    
-    if (result.success) {
-      // Start identity generation
-      setStep('generating');
-      setIsGeneratingIdentity(true);
-      
-      // Simulate progress
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 10;
-        setGenerationProgress(progress);
-        if (progress >= 100) {
-          clearInterval(interval);
-        }
-      }, 300);
-      
-      // Generate identity after 3 seconds
-      setTimeout(() => {
-        const zkIdentity = generateZKIdentity();
-        setIdentity(zkIdentity);
-        
-        // Store in localStorage
-        localStorage.setItem('sv_identity', JSON.stringify(zkIdentity));
-        
-        setIsGeneratingIdentity(false);
-        setStep('success');
-      }, 3000);
-    } else {
-      // Show error
-      setEligibilityError(result.message);
-      setStep('verify');
-    }
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
 
-  const maskCommitment = (commitment) => {
-    if (!commitment) return '';
-    return `${commitment.slice(0, 8)}...${commitment.slice(-8)}`;
-  };
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
-  const handleProceedToDashboard = () => {
-    if (onSessionReady) {
-      onSessionReady(identity);
-    }
+    window.history.pushState({}, '', '/voter/session-init');
+    window.dispatchEvent(new PopStateEvent('popstate'));
   };
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 overflow-hidden flex items-center justify-center">
-      {/* Animated Canvas Background */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
         style={{ zIndex: 0 }}
       />
 
-      {/* Grid overlay */}
       <div
         className="absolute inset-0 opacity-10"
         style={{
@@ -197,354 +104,100 @@ export function VoterSessionInit({ onSessionReady }) {
         }}
       />
 
-      {/* Gradient orbs */}
       <div className="absolute top-1/4 right-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" style={{ zIndex: 1 }} />
       <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" style={{ zIndex: 1 }} />
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-2xl px-4">
-        <AnimatePresence mode="wait">
-          {/* Step 1: Intro - Your Voice Deserves a Sanctuary */}
-          {step === 'intro' && (
-            <motion.div
-              key="intro"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-              className="text-center"
-            >
-              {/* Shield icon */}
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="flex justify-center mb-8"
-              >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-2xl" />
-                  <div className="relative w-20 h-20 bg-gradient-to-br from-blue-500/20 to-blue-600/20 backdrop-blur-xl border border-blue-500/30 rounded-full flex items-center justify-center">
-                    <Shield className="w-10 h-10 text-blue-400" />
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Title */}
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-5xl md:text-6xl text-white mb-6"
-              >
-                Your Voice Deserves a Sanctuary.
-              </motion.h1>
-
-              {/* Description */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="space-y-4 mb-8"
-              >
-                <p className="text-gray-300 text-lg">
-                  In a world where every click is tracked and every choice is monitored,
-                  <br />
-                  your vote remains sacred.
-                </p>
-                <p className="text-gray-400">
-                  No email. No password. No personal information. Just your voice,
-                  <br />
-                  cryptographically secured and completely anonymous.
-                </p>
-                <p className="text-blue-400">
-                  Your identity stays with you. Your vote speaks for itself.
-                </p>
-              </motion.div>
-
-              {/* Begin button */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.7 }}
-                className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8"
-              >
-                <Button
-                  size="lg"
-                  onClick={() => setStep('verify')}
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-6 text-lg shadow-2xl shadow-blue-500/50 transition-all duration-300 hover:shadow-blue-500/70 hover:scale-105"
-                >
-                  <Lock className="mr-2 w-5 h-5" />
-                  Begin Private Session
-                </Button>
-
-                <p className="text-gray-400 text-sm mt-6 leading-relaxed">
-                  By starting a session, you'll generate a one-time cryptographic identity that ensures
-                  your vote is counted while keeping you completely anonymous. No traces. No tracking. Just democracy.
-                </p>
-              </motion.div>
-            </motion.div>
-          )}
-
-          {/* Step 2: Verify - Choose verification method */}
-          {step === 'verify' && (
-            <motion.div
-              key="verify"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-              className="text-center"
-            >
-              {/* Title */}
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-4xl md:text-5xl text-white mb-4"
-              >
-                Enter the Sanctuary
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-gray-400 mb-12"
-              >
-                Your identity will be protected by zero-knowledge proofs. No one—not even us—will know who you voted for.
-              </motion.p>
-
-              {/* Eligibility error */}
-              <AnimatePresence>
-                {eligibilityError && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="mb-6 bg-red-500/10 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm"
-                  >
-                    <div className="flex items-center justify-center gap-2 text-red-400">
-                      <AlertCircle className="w-5 h-5" />
-                      <span>{eligibilityError}</span>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Verification options */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="bg-slate-800/30 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 mb-6 space-y-4"
-              >
-                {/* DID Verification */}
-                <Button
-                  size="lg"
-                  onClick={() => handleVerificationMethod('DID')}
-                  disabled={isCheckingEligibility}
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-6 text-lg shadow-lg shadow-blue-500/50 transition-all duration-300 hover:shadow-blue-500/70 disabled:opacity-50 disabled:cursor-not-allowed group"
-                >
-                  {isCheckingEligibility && selectedMethod === 'DID' ? (
-                    <>
-                      <Loader2 className="mr-2 w-5 h-5 animate-spin" />
-                      Verifying Eligibility...
-                    </>
-                  ) : (
-                    <>
-                      <Shield className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" />
-                      Verify with Decentralized ID
-                    </>
-                  )}
-                </Button>
-
-                {/* Biometric Verification */}
-                <Button
-                  size="lg"
-                  onClick={() => handleVerificationMethod('Biometric')}
-                  disabled={isCheckingEligibility}
-                  className="w-full bg-slate-700/50 hover:bg-slate-700/70 text-white py-6 text-lg border border-slate-600/50 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed group"
-                >
-                  {isCheckingEligibility && selectedMethod === 'Biometric' ? (
-                    <>
-                      <Loader2 className="mr-2 w-5 h-5 animate-spin" />
-                      Verifying Eligibility...
-                    </>
-                  ) : (
-                    <>
-                      <Fingerprint className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" />
-                      Biometric Verification
-                    </>
-                  )}
-                </Button>
-              </motion.div>
-
-              {/* Back button */}
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setStep('intro');
-                  setEligibilityError(null);
-                }}
-                disabled={isCheckingEligibility}
-                className="text-gray-400 hover:text-white hover:bg-white/5"
-              >
-                Back to Home
-              </Button>
-            </motion.div>
-          )}
-
-          {/* Step 3: Generating - ZK Identity generation */}
-          {step === 'generating' && (
-            <motion.div
-              key="generating"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.5 }}
-              className="text-center"
-            >
-              <div className="bg-slate-800/30 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-12">
-                {/* Spinner */}
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="flex justify-center mb-8"
-                >
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-blue-500/30 rounded-full blur-2xl" />
-                    <div className="relative w-24 h-24 border-4 border-blue-500/20 border-t-blue-500 rounded-full" />
-                  </div>
-                </motion.div>
-
-                {/* Progress text */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <h2 className="text-3xl text-white mb-4">
-                    Initializing Anonymity Layer...
-                  </h2>
-                  <p className="text-blue-400 mb-2">
-                    Generating Your ZK Identity and Nullifier Hash
-                  </p>
-                  <div className="w-full bg-slate-700/50 rounded-full h-2 mb-4 overflow-hidden">
-                    <motion.div
-                      className="h-full bg-gradient-to-r from-blue-600 to-blue-400"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${generationProgress}%` }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </div>
-                  <p className="text-gray-500 text-sm">
-                    {generationProgress}% Complete
-                  </p>
-                </motion.div>
+      <div className="relative z-10 w-full max-w-md px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-8"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex justify-center mb-6"
+          >
+            <div className="relative">
+              <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-2xl" />
+              <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500/20 to-blue-600/20 backdrop-blur-xl border border-blue-500/30 rounded-full flex items-center justify-center">
+                <Shield className="w-8 h-8 text-blue-400" />
               </div>
-            </motion.div>
-          )}
+            </div>
+          </motion.div>
 
-          {/* Step 4: Success - Identity secured */}
-          {step === 'success' && identity && (
-            <motion.div
-              key="success"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-              className="text-center"
+          <h1 className="text-4xl text-white mb-2">Voter Login</h1>
+          <p className="text-gray-400">Enter your credentials to continue</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="bg-slate-800/30 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8"
+        >
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm text-gray-300 mb-2">Email Address</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-slate-900/50 border border-slate-700/50 rounded-lg pl-11 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 transition-colors"
+                  placeholder="voter@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm text-gray-300 mb-2">Password</label>
+              <div className="relative">
+                <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-slate-900/50 border border-slate-700/50 rounded-lg pl-11 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 transition-colors"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              size="lg"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 text-lg shadow-lg shadow-blue-500/50 transition-all duration-300 hover:shadow-blue-500/70 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {/* Success icon */}
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.6, type: "spring" }}
-                className="flex justify-center mb-8"
-              >
-                <div className="relative">
-                  <div className="absolute inset-0 bg-green-500/20 rounded-full blur-2xl" />
-                  <div className="relative w-20 h-20 bg-gradient-to-br from-green-500/20 to-green-600/20 backdrop-blur-xl border border-green-500/30 rounded-full flex items-center justify-center">
-                    <CheckCircle2 className="w-10 h-10 text-green-400" />
-                  </div>
-                </div>
-              </motion.div>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 w-5 h-5 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </Button>
+          </form>
 
-              {/* Title */}
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-4xl md:text-5xl text-white mb-4"
-              >
-                Identity Secured
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-gray-400 mb-8"
-              >
-                Your anonymous identity has been cryptographically generated.
-                <br />
-                You can now cast your vote with complete privacy.
-              </motion.p>
-
-              {/* Identity details */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="bg-slate-800/30 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 mb-8 space-y-4"
-              >
-                <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-xl">
-                  <div className="text-left">
-                    <p className="text-gray-500 text-sm mb-1">Commitment Hash</p>
-                    <p className="text-white font-mono text-sm">
-                      {showCommitment ? identity.commitment : maskCommitment(identity.commitment)}
-                    </p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowCommitment(!showCommitment)}
-                    className="text-gray-400 hover:text-white"
-                  >
-                    {showCommitment ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </Button>
-                </div>
-
-                <div className="p-4 bg-slate-900/50 rounded-xl text-left">
-                  <p className="text-gray-500 text-sm mb-1">Nullifier Hash (Preview)</p>
-                  <p className="text-white font-mono text-sm">
-                    {maskCommitment(identity.nullifierHash)}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2 text-green-400 text-sm">
-                  <Shield className="w-4 h-4" />
-                  <span>Zero-knowledge proof generated • Merkle tree ready</span>
-                </div>
-              </motion.div>
-
-              {/* Proceed button */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
-              >
-                <Button
-                  size="lg"
-                  onClick={handleProceedToDashboard}
-                  className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-12 py-6 text-lg shadow-2xl shadow-blue-500/50 transition-all duration-300 hover:shadow-blue-500/70 hover:scale-105"
-                >
-                  Enter Voting Dashboard
-                </Button>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => {
+                window.history.pushState({}, '', '/');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
+              className="text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              Back to Home
+            </button>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

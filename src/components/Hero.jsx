@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { Shield, Infinity, Users, ArrowRight } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "./ui/Button";
 import { useEffect, useRef } from "react";
 
-export function Hero() {
+export default function Hero() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -195,22 +195,12 @@ export function Hero() {
             </h2>
           </motion.div>
 
-<<<<<<< HEAD
-          <button
-            onClick={() => {
-              window.history.pushState({}, '', '/admin/login');
-              window.dispatchEvent(new PopStateEvent('popstate'));
-            }}
-            className="group relative px-10 py-5 bg-slate-700 hover:bg-slate-600 text-white text-lg font-semibold rounded-full transition-all duration-300 hover:shadow-[0_0_25px_rgba(71,85,105,0.6)] w-full sm:w-auto min-h-[56px] focus:outline-none focus:ring-4 focus:ring-slate-500/50"
-            aria-label="Admin Login"
-=======
           {/* Description */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-gray-300 text-lg md:text-xl mb-4 max-w-2xl mx-auto leading-relaxed"
->>>>>>> ee26865 (Wire Biometric/DID pages, fix imports (framer-motion), normalize exports, add routes, image refs)
           >
             Your voice matters.
           </motion.p>

@@ -2,35 +2,32 @@ import { motion } from "framer-motion";
 import { Fingerprint, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-export function BiometricScan({ onComplete }) {
+export default function BiometricScan() {
   const [scanProgress, setScanProgress] = useState(0);
-  const [scanStatus, setScanStatus] = useState('scanning'); // scanning, success, failed
+  const [scanStatus, setScanStatus] = useState('scanning');
   const [pulseRings, setPulseRings] = useState([]);
 
   useEffect(() => {
-    // Simulate scanning progress
     const interval = setInterval(() => {
       setScanProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          // Simulate success (90% success rate)
           const success = Math.random() > 0.1;
           setScanStatus(success ? 'success' : 'failed');
-          
-          // Callback after animation
+
           setTimeout(() => {
-            if (onComplete) {
-              onComplete(success);
+            if (success) {
+              window.history.pushState({}, '', '/voter/dashboard');
+              window.dispatchEvent(new PopStateEvent('popstate'));
             }
           }, 1500);
-          
+
           return 100;
         }
         return prev + 2;
       });
     }, 50);
 
-    // Generate pulse rings
     const ringsInterval = setInterval(() => {
       setPulseRings((prev) => [...prev, Date.now()]);
     }, 800);
@@ -39,9 +36,8 @@ export function BiometricScan({ onComplete }) {
       clearInterval(interval);
       clearInterval(ringsInterval);
     };
-  }, [onComplete]);
+  }, []);
 
-  // Clean up old rings
   useEffect(() => {
     const cleanup = setInterval(() => {
       setPulseRings((prev) => prev.filter((time) => Date.now() - time < 3000));
@@ -51,13 +47,11 @@ export function BiometricScan({ onComplete }) {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 overflow-hidden flex items-center justify-center">
-      {/* Animated background glow */}
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-3xl" />
       </div>
 
-      {/* Grid overlay */}
       <div
         className="absolute inset-0 opacity-5"
         style={{
@@ -69,11 +63,8 @@ export function BiometricScan({ onComplete }) {
         }}
       />
 
-      {/* Main content */}
       <div className="relative z-10 flex flex-col items-center justify-center px-4">
-        {/* Fingerprint scanner */}
         <div className="relative w-80 h-80 flex items-center justify-center mb-12">
-          {/* Pulse rings */}
           {pulseRings.map((time) => (
             <motion.div
               key={time}
@@ -84,9 +75,7 @@ export function BiometricScan({ onComplete }) {
             />
           ))}
 
-          {/* Circular progress rings */}
           <svg className="absolute inset-0 w-full h-full -rotate-90">
-            {/* Background circles */}
             {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
               <circle
                 key={i}
@@ -98,8 +87,7 @@ export function BiometricScan({ onComplete }) {
                 strokeWidth="1.5"
               />
             ))}
-            
-            {/* Animated progress ring */}
+
             <motion.circle
               cx="160"
               cy="160"
@@ -110,13 +98,12 @@ export function BiometricScan({ onComplete }) {
               strokeLinecap="round"
               strokeDasharray={2 * Math.PI * 140}
               initial={{ strokeDashoffset: 2 * Math.PI * 140 }}
-              animate={{ 
+              animate={{
                 strokeDashoffset: 2 * Math.PI * 140 * (1 - scanProgress / 100)
               }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             />
-            
-            {/* Gradient definition */}
+
             <defs>
               <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#3b82f6" />
@@ -125,7 +112,6 @@ export function BiometricScan({ onComplete }) {
               </linearGradient>
             </defs>
 
-            {/* Horizontal scan line */}
             <motion.line
               x1="40"
               x2="280"
@@ -134,28 +120,27 @@ export function BiometricScan({ onComplete }) {
               stroke="rgba(59, 130, 246, 0.5)"
               strokeWidth="2"
               initial={{ y1: 40, y2: 40 }}
-              animate={{ 
+              animate={{
                 y1: scanStatus === 'scanning' ? [40, 280] : 160,
                 y2: scanStatus === 'scanning' ? [40, 280] : 160
               }}
-              transition={{ 
-                duration: 2, 
+              transition={{
+                duration: 2,
                 repeat: scanStatus === 'scanning' ? Infinity : 0,
                 ease: "linear"
               }}
             />
           </svg>
 
-          {/* Center icon */}
           <div className="relative z-10">
             {scanStatus === 'scanning' && (
               <motion.div
-                animate={{ 
+                animate={{
                   scale: [1, 1.1, 1],
                   opacity: [0.5, 1, 0.5]
                 }}
-                transition={{ 
-                  duration: 2, 
+                transition={{
+                  duration: 2,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
@@ -163,7 +148,7 @@ export function BiometricScan({ onComplete }) {
                 <Fingerprint className="w-24 h-24 text-blue-400" strokeWidth={1.5} />
               </motion.div>
             )}
-            
+
             {scanStatus === 'success' && (
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
@@ -173,7 +158,7 @@ export function BiometricScan({ onComplete }) {
                 <CheckCircle2 className="w-24 h-24 text-green-400" strokeWidth={2} />
               </motion.div>
             )}
-            
+
             {scanStatus === 'failed' && (
               <motion.div
                 initial={{ scale: 0 }}
@@ -186,7 +171,6 @@ export function BiometricScan({ onComplete }) {
           </div>
         </div>
 
-        {/* Status text */}
         <motion.div
           className="text-center"
           initial={{ opacity: 0, y: 20 }}
@@ -203,7 +187,7 @@ export function BiometricScan({ onComplete }) {
               </div>
             </>
           )}
-          
+
           {scanStatus === 'success' && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -214,7 +198,7 @@ export function BiometricScan({ onComplete }) {
               <p className="text-green-400">Identity confirmed successfully</p>
             </motion.div>
           )}
-          
+
           {scanStatus === 'failed' && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -227,7 +211,6 @@ export function BiometricScan({ onComplete }) {
           )}
         </motion.div>
 
-        {/* Progress bar */}
         {scanStatus === 'scanning' && (
           <motion.div
             className="w-64 mt-8"
@@ -238,11 +221,11 @@ export function BiometricScan({ onComplete }) {
             <div className="w-full bg-slate-800/50 rounded-full h-1.5 overflow-hidden">
               <motion.div
                 className="h-full bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 bg-[length:200%_100%]"
-                animate={{ 
+                animate={{
                   width: `${scanProgress}%`,
                   backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
                 }}
-                transition={{ 
+                transition={{
                   width: { duration: 0.3 },
                   backgroundPosition: { duration: 2, repeat: Infinity, ease: "linear" }
                 }}
@@ -251,7 +234,6 @@ export function BiometricScan({ onComplete }) {
           </motion.div>
         )}
 
-        {/* Security badge */}
         <motion.div
           className="mt-12 flex items-center gap-2 text-gray-500 text-sm"
           initial={{ opacity: 0 }}
