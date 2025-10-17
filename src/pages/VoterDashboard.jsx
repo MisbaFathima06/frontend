@@ -1,35 +1,53 @@
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
 import { useAuth } from '../components/auth/AuthProvider';
 import { listCandidates, generateProof, maskHex, submitVote } from '../lib/helpers/voting';
 import { Shield, Vote, LogOut, AlertCircle } from 'lucide-react';
+=======
+import { motion } from "framer-motion";
+import { Shield, LogOut, AlertCircle } from "lucide-react";
+import { Button } from "./ui/button";
+import { useEffect, useRef } from "react";
+>>>>>>> ee26865 (Wire Biometric/DID pages, fix imports (framer-motion), normalize exports, add routes, image refs)
 
-function VoterDashboardContent() {
-  const { logout } = useAuth();
-  const [identity, setIdentity] = useState(null);
-  const [candidates, setCandidates] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [voting, setVoting] = useState(false);
+export function CastVote({ identity, candidates = [], onLogout }) {
+  const canvasRef = useRef(null);
 
+  // Animated background
   useEffect(() => {
-    const storedIdentity = sessionStorage.getItem('sv_identity');
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    if (!storedIdentity) {
-      window.history.pushState({}, '', '/voter/session-init');
-      window.dispatchEvent(new PopStateEvent('popstate'));
-      return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        z: Math.random() * 1000,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        vz: (Math.random() - 0.5) * 1.5,
+      });
     }
 
-    try {
-      setIdentity(JSON.parse(storedIdentity));
-    } catch (e) {
-      window.history.pushState({}, '', '/voter/session-init');
-      window.dispatchEvent(new PopStateEvent('popstate'));
-      return;
-    }
+    function animate() {
+      if (!ctx || !canvas) return;
+      ctx.fillStyle = "rgba(3, 7, 18, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    loadCandidates();
-  }, []);
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.z += p.vz;
 
+<<<<<<< HEAD
   const loadCandidates = async () => {
     try {
       const data = listCandidates();
@@ -40,146 +58,208 @@ function VoterDashboardContent() {
       setLoading(false);
     }
   };
+=======
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        if (p.z < 0 || p.z > 1000) p.vz *= -1;
+>>>>>>> ee26865 (Wire Biometric/DID pages, fix imports (framer-motion), normalize exports, add routes, image refs)
 
-  const handleVote = async (candidate) => {
-    setVoting(true);
+        const scale = 1000 / (1000 + p.z);
+        const size = Math.max(1, 2 * scale);
 
+<<<<<<< HEAD
     try {
       const proofData = generateProof(identity, candidate.id);
 
       const result = await submitVote(candidate.id, proofData);
+=======
+        const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 3);
+        gradient.addColorStop(0, `rgba(59, 130, 246, ${0.6 * scale})`);
+        gradient.addColorStop(1, "rgba(59, 130, 246, 0)");
 
-      sessionStorage.setItem('sv_vote_result', JSON.stringify({
-        candidateName: candidate.name,
-        txHash: result.txHash,
-        blockNumber: result.blockNumber
-      }));
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, size * 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+>>>>>>> ee26865 (Wire Biometric/DID pages, fix imports (framer-motion), normalize exports, add routes, image refs)
 
-      window.history.pushState({}, '', '/vote-confirmed');
-      window.dispatchEvent(new PopStateEvent('popstate'));
-    } catch (error) {
-      console.error('Error submitting vote:', error);
-      setVoting(false);
+      requestAnimationFrame(animate);
     }
-  };
 
-  const handleLogout = () => {
-    logout();
+    animate();
+
+    const handleResize = () => {
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const maskCommitment = (commitment) => {
+    if (!commitment) return "0x8a35...c79d";
+    return `0x${commitment.slice(0, 4)}...${commitment.slice(-4)}`;
   };
 
   return (
-    <div className="min-h-screen bg-slate-900">
-      <nav className="border-b border-slate-700 bg-slate-800/50 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center">
-                <Vote className="w-5 h-5 text-blue-400" />
-              </div>
-              <h1 className="text-xl font-bold text-white">Cast Your Vote</h1>
-            </div>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
-                aria-label="Logout"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="relative min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 overflow-hidden">
+      {/* Animated Canvas Background */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full"
+        style={{ zIndex: 0 }}
+      />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-12">
-          <h2 className="text-4xl font-bold text-white mb-3">
+      {/* Grid overlay */}
+      <div
+        className="absolute inset-0 opacity-10"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: "40px 40px",
+          zIndex: 1,
+        }}
+      />
+
+      {/* Gradient orbs */}
+      <div className="absolute top-1/4 right-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" style={{ zIndex: 1 }} />
+      <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" style={{ zIndex: 1 }} />
+
+      {/* Top Navigation */}
+      <motion.nav
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="relative z-50 flex items-center justify-between px-8 py-6 border-b border-slate-800/50 backdrop-blur-sm"
+      >
+        <div className="flex items-center gap-2 text-white">
+          <Shield className="w-5 h-5 text-blue-400" />
+          <span className="text-lg">Cast Your Vote</span>
+        </div>
+
+        <Button
+          variant="ghost"
+          onClick={onLogout}
+          className="text-gray-400 hover:text-white hover:bg-white/5"
+        >
+          <LogOut className="w-4 h-4 mr-2" />
+          Logout
+        </Button>
+      </motion.nav>
+
+      {/* Main Content */}
+      <div className="relative z-10 px-8 py-12 max-w-5xl mx-auto">
+        {/* Hero Text */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-12"
+        >
+          <h1 className="text-5xl text-white mb-4">
             Your Voice. Your Vote. Your Power.
-          </h2>
-          <p className="text-gray-300 text-lg">
+          </h1>
+          <p className="text-gray-400 text-lg">
             Select your candidate. Your choice is completely anonymous and verifiable.
           </p>
-        </div>
+        </motion.div>
 
-        {identity && (
-          <div className="bg-blue-500/10 border border-blue-500/50 rounded-2xl p-6 mb-8">
-            <div className="flex items-start gap-4">
-              <Shield className="w-6 h-6 text-blue-400 flex-shrink-0 mt-0.5" />
-              <div className="flex-1 min-w-0">
-                <h3 className="text-white font-semibold mb-2">ZK Identity Active</h3>
-                <p className="text-sm text-gray-300 mb-3">
-                  Your anonymous identity is secured and ready for voting
+        {/* ZK Identity Active Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="bg-blue-500/10 backdrop-blur-xl border border-blue-500/30 rounded-2xl p-6 mb-8"
+        >
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+              <Shield className="w-5 h-5 text-blue-400" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-white text-lg mb-2">ZK Identity Active</h3>
+              <p className="text-gray-400 text-sm mb-3">
+                Your anonymous identity is secured and ready for voting
+              </p>
+              <div className="bg-slate-900/50 border border-slate-700/50 rounded-lg px-4 py-3">
+                <p className="text-blue-400 font-mono text-sm">
+                  {maskCommitment(identity?.commitment)}
                 </p>
-                <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-sm font-mono text-blue-400">
-                    {maskHex(identity.commitment)}
-                  </p>
-                </div>
               </div>
             </div>
           </div>
-        )}
+        </motion.div>
 
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-            <p className="text-gray-300 mt-4 text-lg">Loading candidates...</p>
-          </div>
-        ) : candidates.length === 0 ? (
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-12 text-center">
-            <AlertCircle className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-            <p className="text-gray-300">No candidates available at this time</p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 gap-6">
-            {candidates.map((candidate) => (
-              <div
-                key={candidate.id}
-                className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-8 hover:border-slate-600 transition-all"
+        {/* Candidates Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="bg-slate-800/30 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-12"
+        >
+          {candidates.length === 0 ? (
+            // Empty State
+            <div className="text-center py-16">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="flex justify-center mb-6"
               >
-                <div className="flex items-start gap-6 mb-6">
-                  {candidate.image && (
-                    <img
-                      src={candidate.image}
-                      alt={candidate.name}
-                      className="w-24 h-24 rounded-xl object-cover flex-shrink-0"
-                    />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-xl font-bold text-white mb-2">{candidate.name}</h3>
-                    <p className="text-sm text-blue-400 mb-3">{candidate.party}</p>
-                    <p className="text-sm text-gray-300 line-clamp-3">{candidate.biography}</p>
-                  </div>
+                <div className="w-20 h-20 bg-slate-700/30 rounded-full flex items-center justify-center">
+                  <AlertCircle className="w-10 h-10 text-gray-500" strokeWidth={1.5} />
                 </div>
-
-                <button
-                  onClick={() => handleVote(candidate)}
-                  disabled={voting}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus:ring-4 focus:ring-blue-500/50 min-h-[48px]"
-                  aria-label={`Vote for ${candidate.name}`}
+              </motion.div>
+              <h3 className="text-2xl text-white mb-3">
+                No candidates available at this time
+              </h3>
+              <p className="text-gray-500">
+                Please check back later when voting is active
+              </p>
+            </div>
+          ) : (
+            // Candidates List (for when you add them)
+            <div className="space-y-4">
+              {candidates.map((candidate, index) => (
+                <motion.div
+                  key={candidate.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: 0.1 * index }}
+                  className="bg-slate-900/50 border border-slate-700/50 rounded-xl p-6 hover:border-blue-500/50 transition-all cursor-pointer"
                 >
-                  {voting ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Processing Vote...
-                    </>
-                  ) : (
-                    <>
-                      <Vote className="w-5 h-5" />
-                      Vote
-                    </>
-                  )}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 bg-slate-700/50 rounded-lg flex items-center justify-center">
+                      <span className="text-2xl text-white">{candidate.name[0]}</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-xl text-white mb-1">{candidate.name}</h4>
+                      <p className="text-gray-400 text-sm">{candidate.party}</p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      className="border-blue-500/50 text-blue-400 hover:bg-blue-500/10"
+                    >
+                      Select
+                    </Button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </motion.div>
       </div>
     </div>
   );
 }
+<<<<<<< HEAD
 
 export default function VoterDashboard() {
   return <VoterDashboardContent />;
 }
+=======
+>>>>>>> ee26865 (Wire Biometric/DID pages, fix imports (framer-motion), normalize exports, add routes, image refs)
