@@ -70,7 +70,7 @@ const Hero = () => {
 
           <button
             onClick={() => {
-              window.history.pushState({}, '', '/admin/auth');
+              window.history.pushState({}, '', '/admin/login');
               window.dispatchEvent(new PopStateEvent('popstate'));
             }}
             className="group relative px-10 py-5 bg-slate-700 hover:bg-slate-600 text-white text-lg font-semibold rounded-full transition-all duration-300 hover:shadow-[0_0_25px_rgba(71,85,105,0.6)] w-full sm:w-auto min-h-[56px] focus:outline-none focus:ring-4 focus:ring-slate-500/50"

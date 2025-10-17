@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import RequireUser from '../components/auth/RequireUser';
 import { useAuth } from '../components/auth/AuthProvider';
 import { CheckCircle, ExternalLink, LogOut } from 'lucide-react';
 
@@ -24,6 +23,9 @@ function VoteConfirmedContent() {
   }, []);
 
   const handleEndSession = () => {
+    sessionStorage.removeItem('sv_user');
+    sessionStorage.removeItem('sv_identity');
+    sessionStorage.removeItem('sv_vote_result');
     logout();
   };
 
@@ -99,9 +101,5 @@ function VoteConfirmedContent() {
 }
 
 export default function VoteConfirmed() {
-  return (
-    <RequireUser>
-      <VoteConfirmedContent />
-    </RequireUser>
-  );
+  return <VoteConfirmedContent />;
 }

@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
-import RequireUser from '../components/auth/RequireUser';
 import { useAuth } from '../components/auth/AuthProvider';
-import { listCandidates } from '../lib/api/candidates';
-import { submitVote } from '../lib/api/votes';
-import { generateProof, maskHex } from '../lib/zk/identity';
+import { listCandidates, generateProof, maskHex, submitVote } from '../lib/helpers/voting';
 import { Shield, Vote, LogOut, AlertCircle } from 'lucide-react';
 
 function VoterDashboardContent() {
@@ -35,7 +32,7 @@ function VoterDashboardContent() {
 
   const loadCandidates = async () => {
     try {
-      const data = await listCandidates();
+      const data = listCandidates();
       setCandidates(data);
     } catch (error) {
       console.error('Error loading candidates:', error);
@@ -48,16 +45,9 @@ function VoterDashboardContent() {
     setVoting(true);
 
     try {
-      const proofData = generateProof(candidate.id, identity.commitment);
+      const proofData = generateProof(identity, candidate.id);
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      const result = await submitVote({
-        candidateId: candidate.id,
-        proof: proofData.proof,
-        nullifierHash: proofData.nullifierHash,
-        commitment: identity.commitment
-      });
+      const result = await submitVote(candidate.id, proofData);
 
       sessionStorage.setItem('sv_vote_result', JSON.stringify({
         candidateName: candidate.name,
@@ -191,9 +181,5 @@ function VoterDashboardContent() {
 }
 
 export default function VoterDashboard() {
-  return (
-    <RequireUser>
-      <VoterDashboardContent />
-    </RequireUser>
-  );
+  return <VoterDashboardContent />;
 }

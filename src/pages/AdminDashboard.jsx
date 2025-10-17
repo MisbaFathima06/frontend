@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import RequireAdmin from '../components/auth/RequireAdmin';
 import { useAuth } from '../components/auth/AuthProvider';
-import { submitCandidate, listCandidates } from '../lib/api/candidates';
+import { submitCandidate, listCandidates } from '../lib/helpers/voting';
 import { UserPlus, Users, CheckCircle, Hash, LogOut } from 'lucide-react';
 
 function AdminDashboardContent() {
@@ -20,8 +19,8 @@ function AdminDashboardContent() {
     loadCandidates();
   }, []);
 
-  const loadCandidates = async () => {
-    const data = await listCandidates();
+  const loadCandidates = () => {
+    const data = listCandidates();
     setCandidates(data);
   };
 
@@ -31,7 +30,7 @@ function AdminDashboardContent() {
     setSuccess('');
 
     try {
-      const result = await submitCandidate(formData);
+      const result = submitCandidate(formData);
 
       setSuccess('Candidate Added & Hash Queued for Audit');
 
@@ -42,7 +41,7 @@ function AdminDashboardContent() {
         image: ''
       });
 
-      await loadCandidates();
+      loadCandidates();
     } catch (error) {
       console.error('Error adding candidate:', error);
     } finally {
@@ -51,6 +50,9 @@ function AdminDashboardContent() {
   };
 
   const handleLogout = () => {
+    sessionStorage.removeItem('sv_user');
+    sessionStorage.removeItem('sv_identity');
+    sessionStorage.removeItem('sv_vote_result');
     logout();
   };
 
@@ -223,9 +225,5 @@ function AdminDashboardContent() {
 }
 
 export default function AdminDashboard() {
-  return (
-    <RequireAdmin>
-      <AdminDashboardContent />
-    </RequireAdmin>
-  );
+  return <AdminDashboardContent />;
 }

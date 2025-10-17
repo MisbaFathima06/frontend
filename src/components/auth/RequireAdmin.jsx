@@ -6,7 +6,7 @@ export default function RequireAdmin({ children }) {
 
   useEffect(() => {
     if (!user || user.role !== 'admin') {
-      window.history.pushState({}, '', '/admin/auth');
+      window.history.pushState({}, '', '/admin/login');
       window.dispatchEvent(new PopStateEvent('popstate'));
     }
   }, [user]);

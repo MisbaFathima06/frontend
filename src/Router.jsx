@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { AuthProvider } from './components/auth/AuthProvider';
+import RequireAdmin from './components/auth/RequireAdmin';
+import RequireUser from './components/auth/RequireUser';
 
 import App from './App';
 import Login from './pages/Login';
@@ -31,21 +32,42 @@ export default function Router() {
     };
   }, []);
 
-  const routes = {
-    '/': App,
-    '/voter/auth': Login,
-    '/admin/auth': AdminLogin,
-    '/admin/dashboard': AdminDashboard,
-    '/voter/session-init': VoterSessionInit,
-    '/voter/dashboard': VoterDashboard,
-    '/vote-confirmed': VoteConfirmed
+  const getRoute = () => {
+    switch (currentPath) {
+      case '/':
+        return <App />;
+      case '/voter/auth':
+        return <Login />;
+      case '/admin/login':
+        return <AdminLogin />;
+      case '/admin/dashboard':
+        return (
+          <RequireAdmin>
+            <AdminDashboard />
+          </RequireAdmin>
+        );
+      case '/voter/session-init':
+        return (
+          <RequireUser>
+            <VoterSessionInit />
+          </RequireUser>
+        );
+      case '/voter/dashboard':
+        return (
+          <RequireUser>
+            <VoterDashboard />
+          </RequireUser>
+        );
+      case '/vote-confirmed':
+        return (
+          <RequireUser>
+            <VoteConfirmed />
+          </RequireUser>
+        );
+      default:
+        return <App />;
+    }
   };
 
-  const Component = routes[currentPath] || App;
-
-  return (
-    <AuthProvider>
-      <Component />
-    </AuthProvider>
-  );
+  return getRoute();
 }
