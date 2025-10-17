@@ -2,20 +2,17 @@ import { useEffect } from 'react';
 import { useAuth } from './AuthProvider';
 
 export default function RequireUser({ children }) {
-  const { role } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
-    if (!role) {
-      window.location.href = '/login';
+    if (!user || user.role !== 'voter') {
+      window.history.pushState({}, '', '/voter/auth');
+      window.dispatchEvent(new PopStateEvent('popstate'));
     }
-  }, [role]);
+  }, [user]);
 
-  if (!role) {
-    return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-        <div className="text-blue-400">Redirecting to login...</div>
-      </div>
-    );
+  if (!user || user.role !== 'voter') {
+    return null;
   }
 
   return children;

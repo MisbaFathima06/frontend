@@ -1,80 +1,51 @@
-import { useState } from 'react';
 import { useAuth } from '../components/auth/AuthProvider';
-import { Shield, Lock } from 'lucide-react';
+import { Shield, Vote } from 'lucide-react';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { setUserRole } = useAuth();
+  const { setRole } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    if (email === 'admin@vote.org') {
-      setUserRole('admin', { email });
-      window.location.href = '/admin/dashboard';
-    } else {
-      setUserRole('voter', { email });
-      window.location.href = '/voter/session-init';
-    }
-
-    setLoading(false);
+  const handleBeginSession = () => {
+    setRole('voter');
+    window.history.pushState({}, '', '/voter/session-init');
+    window.dispatchEvent(new PopStateEvent('popstate'));
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
+      <div className="max-w-2xl w-full">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-500/10 rounded-full mb-4">
-            <Shield className="w-8 h-8 text-blue-400" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-500/10 rounded-full mb-6">
+            <Shield className="w-10 h-10 text-blue-400" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-3">
-            Your Voice Deserves a Sanctuary
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Your Voice Deserves a Sanctuary.
           </h1>
-          <p className="text-gray-400 text-sm leading-relaxed">
-            This login is for session continuity only, never tied to your Zero-Knowledge Identity.
-          </p>
+          <div className="text-gray-300 text-lg leading-relaxed space-y-4 max-w-xl mx-auto">
+            <p>
+              In a world where every click is tracked and every choice is monitored, your vote remains sacred.
+            </p>
+            <p>
+              No email. No password. No personal information. Just your voice, cryptographically secured and completely anonymous.
+            </p>
+            <p className="text-blue-400 font-medium">
+              Your identity stays with you. Your vote speaks for itself.
+            </p>
+          </div>
         </div>
 
-        <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="your.email@example.com"
-              />
-            </div>
+        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-8 mt-12">
+          <button
+            onClick={handleBeginSession}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-200 flex items-center justify-center gap-3 focus:outline-none focus:ring-4 focus:ring-blue-500/50 text-lg min-h-[56px]"
+            aria-label="Begin Private Session"
+          >
+            <Vote className="w-6 h-6" />
+            Begin Private Session
+          </button>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <span>Initializing...</span>
-              ) : (
-                <>
-                  <Lock className="w-4 h-4" />
-                  Begin Private Session
-                </>
-              )}
-            </button>
-          </form>
-
-          <div className="mt-6 pt-6 border-t border-gray-800">
-            <p className="text-xs text-gray-500 text-center">
-              Your session is encrypted and ephemeral. No identity data is stored.
+          <div className="mt-8 pt-6 border-t border-slate-700">
+            <p className="text-sm text-gray-400 text-center leading-relaxed">
+              By starting a session, you'll generate a one-time cryptographic identity that ensures your vote is counted while keeping you completely anonymous. No traces. No tracking. Just democracy.
             </p>
           </div>
         </div>

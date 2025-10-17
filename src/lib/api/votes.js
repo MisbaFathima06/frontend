@@ -12,11 +12,14 @@ export async function submitVote(payload) {
 
   votes.push(vote);
 
-  return vote;
+  return {
+    ok: true,
+    txHash: vote.txHash,
+    blockNumber: vote.blockNumber
+  };
 }
 
 export async function getVoteCount() {
   await new Promise(resolve => setTimeout(resolve, 200));
-
   return votes.length;
 }

@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Shield, Moon, Sun, User, ShieldCheck } from 'lucide-react';
-import { useAuth } from './auth/AuthProvider';
+import { Shield, Moon, Sun, Vote, Key } from 'lucide-react';
 
 const Navbar = () => {
-  const { role } = useAuth();
   const [darkMode, setDarkMode] = useState(true);
   const [scrolled, setScrolled] = useState(false);
 
@@ -67,30 +65,27 @@ const Navbar = () => {
 
           {/* Right side actions */}
           <div className="flex items-center gap-3">
-            {!role ? (
-              <a
-                href="/login"
-                className="px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors"
-              >
-                Login
-              </a>
-            ) : role === 'admin' ? (
-              <a
-                href="/admin/dashboard"
-                className="flex items-center gap-2 px-4 py-2 text-sm bg-emerald-500/10 text-emerald-400 rounded-lg hover:bg-emerald-500/20 transition-colors"
-              >
-                <ShieldCheck className="w-4 h-4" />
-                Admin Dashboard
-              </a>
-            ) : (
-              <a
-                href="/voter/dashboard"
-                className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-500/10 text-blue-400 rounded-lg hover:bg-blue-500/20 transition-colors"
-              >
-                <User className="w-4 h-4" />
-                Voter Dashboard
-              </a>
-            )}
+            <button
+              onClick={() => {
+                window.history.pushState({}, '', '/voter/auth');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
+              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors rounded-lg hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Start Voting"
+            >
+              🗳️ Start Voting
+            </button>
+
+            <button
+              onClick={() => {
+                window.history.pushState({}, '', '/admin/auth');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
+              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors rounded-lg hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              aria-label="Admin Access"
+            >
+              🔑 Admin Access
+            </button>
 
             {/* Dark Mode Toggle */}
             <button

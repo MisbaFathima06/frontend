@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AuthProvider } from './components/auth/AuthProvider';
 
 import App from './App';
 import Login from './pages/Login';
@@ -6,6 +7,7 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import VoterSessionInit from './pages/VoterSessionInit';
 import VoterDashboard from './pages/VoterDashboard';
+import VoteConfirmed from './pages/VoteConfirmed';
 
 export default function Router() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -31,14 +33,19 @@ export default function Router() {
 
   const routes = {
     '/': App,
-    '/login': Login,
-    '/admin/login': AdminLogin,
+    '/voter/auth': Login,
+    '/admin/auth': AdminLogin,
     '/admin/dashboard': AdminDashboard,
     '/voter/session-init': VoterSessionInit,
-    '/voter/dashboard': VoterDashboard
+    '/voter/dashboard': VoterDashboard,
+    '/vote-confirmed': VoteConfirmed
   };
 
   const Component = routes[currentPath] || App;
 
-  return <Component />;
+  return (
+    <AuthProvider>
+      <Component />
+    </AuthProvider>
+  );
 }

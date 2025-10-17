@@ -54,17 +54,32 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
         >
-          <button className="group relative px-10 py-5 bg-[#1B2A41] hover:bg-[#223351]
+          <button
+            onClick={() => {
+              window.history.pushState({}, '', '/voter/auth');
+              window.dispatchEvent(new PopStateEvent('popstate'));
+            }}
+            className="group relative px-10 py-5 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-full transition-all duration-300 hover:shadow-[0_0_25px_rgba(59,130,246,0.6)] w-full sm:w-auto min-h-[56px] focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+            aria-label="Voter Login / Start Voting"
+          >
+            <span className="flex items-center justify-center gap-3">
+              🗳️ Voter Login / Start Voting
+              <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+            </span>
+          </button>
 
-
- text-white text-lg font-semibold rounded-full transition-all duration-300 hover:shadow-[0_0_25px_rgba(30,64,175,0.6)]">
-  <span className="flex items-center gap-3">
-    Start Voting Now
-    <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
-  </span>
-</button>
-
-
+          <button
+            onClick={() => {
+              window.history.pushState({}, '', '/admin/auth');
+              window.dispatchEvent(new PopStateEvent('popstate'));
+            }}
+            className="group relative px-10 py-5 bg-slate-700 hover:bg-slate-600 text-white text-lg font-semibold rounded-full transition-all duration-300 hover:shadow-[0_0_25px_rgba(71,85,105,0.6)] w-full sm:w-auto min-h-[56px] focus:outline-none focus:ring-4 focus:ring-slate-500/50"
+            aria-label="Admin Login"
+          >
+            <span className="flex items-center justify-center gap-3">
+              🔑 Admin Login
+            </span>
+          </button>
         </motion.div>
 
         <motion.div

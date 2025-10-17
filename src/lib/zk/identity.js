@@ -1,17 +1,20 @@
 export function generateIdentity() {
-  const commitment = `0x${Math.random().toString(16).substr(2, 64)}`;
-  const nullifier = `0x${Math.random().toString(16).substr(2, 64)}`;
+  const commitment = `0x${Math.random().toString(16).substr(2, 60)}`;
+  const nullifierHash = `0x${Math.random().toString(16).substr(2, 60)}`;
 
   return {
     commitment,
-    nullifier,
+    nullifierHash,
     timestamp: new Date().toISOString()
   };
 }
 
-export function generateProof(input) {
-  const { candidateId, commitment } = input;
+export function maskHex(hex) {
+  if (!hex || hex.length < 10) return hex;
+  return `${hex.substring(0, 6)}...${hex.substring(hex.length - 4)}`;
+}
 
+export function generateProof(candidateId, commitment) {
   const proof = {
     a: [
       `0x${Math.random().toString(16).substr(2, 64)}`,
@@ -42,8 +45,4 @@ export function generateProof(input) {
     commitment,
     timestamp: new Date().toISOString()
   };
-}
-
-export function verifyIdentity(commitment) {
-  return commitment && commitment.startsWith('0x') && commitment.length === 66;
 }
